@@ -10,45 +10,45 @@ export class ContactController{
         
             newContact.save((err, contact) => {
                 if(err){
-                    res.send(err);
+                    res.status(500).send(err);
                 }    
-                res.json(contact);
+                res.status(200).json(contact);
             });
     }
 
     public getContacts (req: Request, res: Response) {           
         Contact.find({}, (err, contact) => {
             if(err){
-                res.send(err);
+                res.status(500).send(err);
             }
-            res.json(contact);
+            res.status(200).json(contact);
         });
     }
 
     public getContactWithID (req: Request, res: Response) {           
         Contact.findById(req.params.contactId, (err, contact) => {
             if(err){
-                res.send(err);
+                res.status(500).send(err);
             }
-            res.json(contact);
+            res.status(200).json(contact);
         });
     } 
 
     public updateContact (req: Request, res: Response) {           
         Contact.findOneAndUpdate({ _id: req.params.contactId }, req.body, { new: true }, (err, contact) => {
             if(err){
-                res.send(err);
+                res.status(500).send(err);
             }
-            res.json(contact);
+            res.status(200).json(contact);
         });
     }
 
     public deleteContact (req: Request, res: Response) {           
         Contact.deleteOne({ _id: req.params.contactId }, (err, contact) => {
             if(err){
-                res.send(err);
+                res.status(500).send(err);
             }
-            res.json({ message: 'Successfully deleted contact!'});
+            res.status(200).json({ message: 'Successfully deleted contact!'});
         });
     }
 }

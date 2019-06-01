@@ -25,3 +25,11 @@ export const UserSchema = new Schema({
     default: Date.now
   }
 }); 
+
+// export const userModel
+export interface UserModel{
+  firstname:string;
+  lastname:string;
+  email:string;
+  password:string;
+}

@@ -1,57 +1,62 @@
 import * as mongoose from 'mongoose';
-import { UserSchema } from '../models/userModel';
+import { UserSchema, UserModel } from '../models/userModel';
 import { Request, Response } from 'express';
+import * as bcrypt from 'bcrypt'; 
+
 
 const User = mongoose.model('User', UserSchema);
 export class UserController{
 
-    public addNewUser (req: Request, res: Response) {                
-            let newUser = new User(req.body);
-        
-            // newUser.save((err, contact) => {
-            //     if(err){
-            //         res.send(err);
-            //     }    
-            //     res.json(contact);
-            // });
-            res.json({
-                'test':'test'
-            });
+    public addNewUser (req: Request, res: Response) {   
+        const user: UserModel = req.body;
+
+        bcrypt.hash(user.password, 10, (err, hash) => {
+            if(!err){
+                user.password = hash;
+                const newUser = new User(user);
+                newUser.save((err, user) => {
+                    if(err){
+                        res.status(500).send(err);
+                    }    
+                    res.status(200).json(user);
+                });
+            }
+        }); 
     }
 
-    // public getContacts (req: Request, res: Response) {           
-    //     Contact.find({}, (err, contact) => {
-    //         if(err){
-    //             res.send(err);
-    //         }
-    //         res.json(contact);
-    //     });
-    // }
+    public getUsers (req: Request, res: Response) {           
+        User.find({}, (err, user) => {
+            if(err){
+                res.status(500).send(err);
+            }
+            res.status(200).json(user);
+        });
+    }
 
-    // public getContactWithID (req: Request, res: Response) {           
-    //     Contact.findById(req.params.contactId, (err, contact) => {
-    //         if(err){
-    //             res.send(err);
-    //         }
-    //         res.json(contact);
-    //     });
-    // } 
+    public getUserWithID (req: Request, res: Response) {           
+        User.findById(req.params.userId, (err, user) => {
+            if(err){
+                res.status(500).send(err);
+            }
+            res.status(200).json(user);
+        });
+    } 
 
-    // public updateContact (req: Request, res: Response) {           
-    //     Contact.findOneAndUpdate({ _id: req.params.contactId }, req.body, { new: true }, (err, contact) => {
-    //         if(err){
-    //             res.send(err);
-    //         }
-    //         res.json(contact);
-    //     });
-    // }
+    public updateUser (req: Request, res: Response) {           
+        User.findOneAndUpdate({ _id: req.params.userId }, req.body, { new: true }, (err, user) => {
+            if(err){
+                res.status(500).send(err);
+            }
+            res.status(200).json(user);
+        });
+    }
 
-    // public deleteContact (req: Request, res: Response) {           
-    //     Contact.deleteOne({ _id: req.params.contactId }, (err, contact) => {
-    //         if(err){
-    //             res.send(err);
-    //         }
-    //         res.json({ message: 'Successfully deleted contact!'});
-    //     });
-    // }
+    public deleteUser (req: Request, res: Response) {           
+        User.deleteOne({ _id: req.params.userId }, (err, user) => {
+            if(err){
+                res.status(500).send(err);
+            }
+            res.status(200).json({ message: 'Successfully deleted user!'});
+        });
+    }
 }
