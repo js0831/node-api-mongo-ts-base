@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "./dist/server.js",
   "scripts": {
+    "tsc": "tsc",
     "postinstall": "npm run tsc",
     "build": "tsc --skipLibCheck",
     "dev": "ts-node ./lib/server.ts",
